@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Database\Seeder;
+use Everyman\Neo4j\Cypher\Query;
 
 class DatabaseSeeder extends Seeder
 {
@@ -11,6 +12,12 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        // $this->call(UsersTableSeeder::class);
+        // clear the data
+        $client = DB::connection('neo4j')->getClient();
+        $query   = new Query($client, 'MATCH (n) DETACH DELETE n');
+        $query->getResultSet();
+
+        $this->call(DoctorsLabelSeeder::class);
+        $this->call(PatientsLabelSeeder::class);
     }
 }

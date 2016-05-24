@@ -11,11 +11,68 @@
 |
 */
 
-$factory->define(App\User::class, function (Faker\Generator $faker) {
+$factory->define(App\Patient::class, function (Faker\Generator $faker) {
+
+    $gender =  rand(1,0) ? 'male' : 'female';
+
     return [
-        'name' => $faker->name,
-        'email' => $faker->safeEmail,
-        'password' => bcrypt(str_random(10)),
-        'remember_token' => str_random(10),
+        'first_name'     => $faker->firstName($gender),
+        'last_name'      => $faker->lastName,
+        'gender'         => $gender,
+        'email'          => $faker->safeEmail,
+        'phone'          => $faker->phoneNumber
     ];
+});
+
+$factory->define(\App\Doctor::class, function (Faker\Generator $faker) {
+
+    $gender =  rand(1,0) ? 'male' : 'female';
+
+    return [
+        'npi'            => $faker->unique()->randomNumber(),
+        'specialty_code' => $faker->unique()->randomNumber(),
+        'first_name'     => $faker->firstName($gender),
+        'last_name'      => $faker->lastName,
+        'gender'         => $gender,
+        'email'          => $faker->safeEmail,
+        'phone'          => $faker->phoneNumber,
+        'password'       => bcrypt(str_random(10)),
+        'remember_token' => str_random(10)
+    ];
+});
+
+$factory->define(\App\Appointment::class, function(Faker\Generator $faker) {
+    $rand = rand(1,6);
+    $sign = rand(0,1)? '-':'+';
+    switch(rand(1,4)) {
+        case 1:
+            return [
+                'at' => \Carbon\Carbon::parse("{$sign}{$rand} month"),
+                'status' => 'accepted'
+            ];
+            break;
+        case 2:
+            return [
+                'at' => \Carbon\Carbon::parse("{$sign}{$rand} month"),
+                'status' => 'rejected',
+                'reason' => $faker->sentence
+            ];
+            break;
+        case 3:
+            return [
+                'at' => \Carbon\Carbon::parse("+{$rand} week"),
+                'status' => 'pending'
+            ];
+            break;
+        case 4: // doctor cancelled already accepted appointment
+            return [
+                'at' => \Carbon\Carbon::parse("{$sign}{$rand} month"),
+                'status' => 'cancelled',
+                'cancelled_by' => rand(0,1) ? 'doctor' : 'patient',
+                'reason' => $faker->sentence
+            ];
+            break;
+        default:
+            break;
+    }
 });
