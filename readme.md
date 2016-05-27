@@ -1,27 +1,11 @@
-# Laravel PHP Framework
+# Simple Rest API using Laravel5 and NeoEloquent OGM utilizing Neo4j Graph database
 
-[![Build Status](https://travis-ci.org/laravel/framework.svg)](https://travis-ci.org/laravel/framework)
-[![Total Downloads](https://poser.pugx.org/laravel/framework/d/total.svg)](https://packagist.org/packages/laravel/framework)
-[![Latest Stable Version](https://poser.pugx.org/laravel/framework/v/stable.svg)](https://packagist.org/packages/laravel/framework)
-[![Latest Unstable Version](https://poser.pugx.org/laravel/framework/v/unstable.svg)](https://packagist.org/packages/laravel/framework)
-[![License](https://poser.pugx.org/laravel/framework/license.svg)](https://packagist.org/packages/laravel/framework)
+## Instructions to run the api:
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable, creative experience to be truly fulfilling. Laravel attempts to take the pain out of development by easing common tasks used in the majority of web projects, such as authentication, routing, sessions, queueing, and caching.
-
-Laravel is accessible, yet powerful, providing tools needed for large, robust applications. A superb inversion of control container, expressive migration system, and tightly integrated unit testing support give you the tools you need to build any application with which you are tasked.
-
-## Official Documentation
-
-Documentation for the framework can be found on the [Laravel website](http://laravel.com/docs).
-
-## Contributing
-
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](http://laravel.com/docs/contributions).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell at taylor@laravel.com. All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](http://opensource.org/licenses/MIT).
+1. install neo4j and run ``neo4j start`` in terminal.
+2. run ``http://localhost:7474`` in your browser to make sure neo4j instance is running
+3. clone the git repo, run ``composer install`` and update ``.env`` file with your local neo4j user/name and password
+4. run ``php artisan neo4j:migrate`` to run database migrations (neo4j is schemaless db, migrations are just adding index and unique properties to the nodes).
+5. run ``php artisan db:seed`` to populate the database.
+6. run ``php artisian up`` and ``php artisian serve``.
+7. Switch back to browser to Neo4j visualizer and run following Cypher query to get doctors that have appointments with patients ``MATCH (p:Patient)-[r1:APPOINTMENT]->(a:Appointment)-[r2:WITH]->(d:Doctor) RETURN p,a,d,COUNT(r2) AS c ORDER BY c LIMIT 25``. Pick a doctor node, copy it's email and password to authenticate the doctor via API. A POST request to ``http://localhost:8000/api/v1/authenticate`` would return back a token. You can use that token to make api calls to available routes.
