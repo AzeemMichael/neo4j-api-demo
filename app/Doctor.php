@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Carbon\Carbon;
 use Illuminate\Auth\Authenticatable;
 use Vinelab\NeoEloquent\Eloquent\Relations\MorphMany;
 use Vinelab\NeoEloquent\Eloquent\Model as NeoEloquent;
@@ -45,5 +46,22 @@ class Doctor extends NeoEloquent implements
     public function appointments() : MorphMany
     {
         return $this->morphMany(Appointment::class, 'WITH');
+    }
+
+    /**
+     * @param string $value
+     * @return string
+     */
+    public function getCreatedAtAttribute(string $value) : string
+    {
+        return Carbon::parse($value)->toIso8601String();
+    }
+    /**
+     * @param string $value
+     * @return string
+     */
+    public function getUpdatedAtAttribute(string $value) : string
+    {
+        return Carbon::parse($value)->toIso8601String();
     }
 }

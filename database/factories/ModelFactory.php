@@ -36,7 +36,7 @@ $factory->define(\App\Doctor::class, function (Faker\Generator $faker) {
         'gender'         => $gender,
         'email'          => $faker->safeEmail,
         'phone'          => $faker->phoneNumber,
-        'password'       => bcrypt(str_random(10)),
+        'password'       => bcrypt('password'),
         'remember_token' => str_random(10)
     ];
 });

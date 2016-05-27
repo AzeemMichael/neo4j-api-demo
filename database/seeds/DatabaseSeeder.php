@@ -14,7 +14,7 @@ class DatabaseSeeder extends Seeder
     {
         // clear the data
         $client = DB::connection('neo4j')->getClient();
-        $query   = new Query($client, 'MATCH (n) DETACH DELETE n');
+        $query = new Query($client, 'MATCH (d:Doctor),(p:Patient),(a:Appointment) DETACH DELETE d,p,a');
         $query->getResultSet();
 
         $this->call(DoctorsLabelSeeder::class);
